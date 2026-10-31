@@ -1,0 +1,180 @@
+@import "tailwindcss";
+@import "@fontsource-variable/bricolage-grotesque";
+@import "@fontsource-variable/onest";
+
+/* Midnight drive: navy night, sodium-lamp amber for actions, underglow cyan for live activity. */
+@theme {
+  --color-night: #070914;
+  --color-asphalt: #0d1124;
+  --color-raised: #161b36;
+  --color-line: #232a4f;
+  --color-ink: #e9ecfa;
+  --color-ink-soft: #a6aed3;
+  --color-ink-muted: #727ca9;
+  --color-sodium: #ffb547;
+  --color-sodium-deep: #e8962a;
+  --color-glow: #4fe3d8;
+  --color-danger: #ff6b7a;
+
+  --font-display: "Bricolage Grotesque Variable", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Onest Variable", "Segoe UI", system-ui, sans-serif;
+
+  --radius-panel: 18px;
+  --radius-control: 10px;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    margin: 0;
+    background: var(--color-night);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    user-select: none;
+  }
+  input,
+  textarea,
+  [data-selectable] {
+    user-select: text;
+  }
+  ::selection {
+    background: color-mix(in oklab, var(--color-glow) 35%, transparent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-glow);
+    outline-offset: 2px;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line);
+    border-radius: 99px;
+    border: 3px solid var(--color-night);
+  }
+}
+
+/* Electron: drag the window by the title bar, but keep buttons clickable. */
+.drag {
+  -webkit-app-region: drag;
+}
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+/* Faint street-light haze behind the content area. */
+.haze {
+  background:
+    radial-gradient(900px 420px at 85% -10%, color-mix(in oklab, var(--color-sodium) 9%, transparent), transparent 70%),
+    radial-gradient(700px 380px at 10% 110%, color-mix(in oklab, var(--color-glow) 6%, transparent), transparent 70%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Underglow: the light strip under the title bar. data-state comes from lib/glow.ts. */
+.underglow {
+  position: relative;
+  height: 2px;
+  --c: var(--color-glow);
+}
+.underglow::before,
+.underglow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--c);
+  transition: background 400ms ease, opacity 400ms ease;
+}
+.underglow::after {
+  inset: 0 0 -14px 0;
+  filter: blur(12px);
+  opacity: 0.55;
+}
+.underglow[data-state="idle"] {
+  animation: glow-breathe 5s ease-in-out infinite;
+}
+.underglow[data-state="thinking"]::before,
+.underglow[data-state="thinking"]::after {
+  background: linear-gradient(90deg, transparent 0%, var(--c) 40%, #ffffff 50%, var(--c) 60%, transparent 100%);
+  background-size: 40% 100%;
+  background-repeat: no-repeat;
+  animation: glow-sweep 1.15s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+.underglow[data-state="success"] {
+  opacity: 1;
+}
+.underglow[data-state="error"] {
+  --c: var(--color-danger);
+}
+@keyframes glow-breathe {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.7; }
+}
+@keyframes glow-sweep {
+  from { background-position: -40% 0; }
+  to { background-position: 140% 0; }
+}
+
+/* Orbit map */
+.orbit-ping {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: orbit-ping 1.6s ease-out infinite;
+}
+.orbit-ping-fast {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: orbit-blink 0.9s ease-in-out infinite;
+}
+.orbit-twinkle {
+  animation: orbit-twinkle 3.6s ease-in-out infinite;
+}
+.orbit-sun {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: orbit-sun 6s ease-in-out infinite;
+}
+@keyframes orbit-ping {
+  from { transform: scale(1); opacity: 0.9; }
+  to { transform: scale(2.4); opacity: 0; }
+}
+@keyframes orbit-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+@keyframes orbit-twinkle {
+  0%, 100% { opacity: 0.95; }
+  50% { opacity: 0.5; }
+}
+@keyframes orbit-sun {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+.orbit-sun-alarm {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: orbit-alarm 0.9s ease-in-out infinite;
+}
+@keyframes orbit-alarm {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.18); opacity: 1; }
+}
+/* Low detail: everything holds still */
+.lod-low * {
+  animation: none !important;
+}
