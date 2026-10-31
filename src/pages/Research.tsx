@@ -132,7 +132,7 @@ export function Research() {
           <div>
             <div className="text-[11px] font-semibold tracking-[0.18em] text-sodium/90">RESEARCH · POWERED BY ROVER-1</div>
             <h1 className="mt-2 font-display text-[32px] leading-[1.1] font-semibold tracking-[-0.025em]">Find real sources. Check the facts.</h1>
-            <p className="mt-2 text-[14.5px] text-ink-soft">The same research engine as the ROVER-1 browser extension: Wikipedia and peer-reviewed papers, cited for you.</p>
+                      <p className="mt-2 text-[14.5px] text-ink-soft">Powered by ROVER-1: real sources from Wikipedia and peer-reviewed papers, cited for you.</p>
           </div>
           <div className="flex shrink-0 gap-1 rounded-full border border-line bg-night/50 p-1 text-[12px]">
             {(Object.keys(CITE) as Style[]).map((s) => (
